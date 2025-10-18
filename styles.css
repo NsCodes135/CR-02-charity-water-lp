@@ -23,7 +23,7 @@
 
 /* Global resets and typography */
 * { box-sizing: border-box; }
-html,body { margin:0; padding:0; height:100%; background:var(--color-bg); color:var(--color-dark); font-family:var(--font-sans); }
+html,body { margin:1rem; padding:0; height:100%; background:var(--color-bg); color:var(--color-dark); font-family:var(--font-sans); }
 p { line-height:1.5; margin:0 0 1rem 0; }
 
 /* Simple container centering for page content */
@@ -35,7 +35,8 @@ main, .site-footer { max-width: var(--max-width); margin: 0 auto; padding: 20px;
    - Uses flexbox to center content vertically/horizontally (simple and widely supported)
 */
 .hero{
-  background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=60');
+  background-image: url('img/charity water image.jpg');
+  position: relative; /* allow overlay (::after) to be positioned over the image */
   background-size: cover;
   background-position: center;
   color: white;
@@ -47,24 +48,32 @@ main, .site-footer { max-width: var(--max-width); margin: 0 auto; padding: 20px;
   padding: 40px 20px;
 }
 .hero::after{
-  /* overlay to ensure text stays readable over the image */
+  /* semi-transparent white overlay to lighten the background image
+     This helps dark text or colored headings stand out */
   content: "";
   position: absolute;
+  inset: 0;                    /* top/right/bottom/left = 0 */
+  background: rgba(255,255,255,0.55);
+  z-index: 0;
 }
 .hero-inner{
   position: relative; /* place above overlay */
+  z-index: 1;          /* ensure hero text appears above the overlay */
   max-width: 900px;
+  text-align: left;   /* left-align heading and subheading on larger screens */
 }
 .hero-title{
-  font-size: 2.2rem;
+  font-size: 3rem;       /* increased for stronger visual impact on desktop */
   margin: 0 0 0.5rem 0;
   font-weight:700;
   text-shadow: 0 2px 6px rgba(0,0,0,0.35);
+  color: var(--color-primary);
 }
 .hero-sub{
-  font-size: 1.05rem;
+  font-size: 1.25rem;    /* slightly larger subheading for better hierarchy */
   margin-bottom: 1.25rem;
   opacity: 0.95;
+  color: var(--color-primary);
 }
 
 /* Buttons: clear primary and accent styles */
@@ -96,14 +105,18 @@ main, .site-footer { max-width: var(--max-width); margin: 0 auto; padding: 20px;
   align-items: center;
   padding: 40px 0;
 }
+/* replaced: use flex-basis so the full image is visible (object-fit: contain) */
 .story-image{
-  width: 45%;
+  flex: 0 0 280px;     /* fixed display size so the full image can be shown */
+  width: 280px;
+  max-width: 100%;
+  height: auto;
   border-radius: var(--radius);
-  object-fit: cover;
-  max-height: 320px;
+  object-fit: contain; /* show full image without cropping */
 }
 .story-content{
-  width: 55%;
+  flex: 1;             /* allow text area to grow and fill remaining space */
+  min-width: 0;        /* ensure content can shrink properly in flex layouts */
 }
 
 /* Small utility styles */
@@ -137,15 +150,17 @@ main, .site-footer { max-width: var(--max-width); margin: 0 auto; padding: 20px;
    - The breakpoints below are simple and beginner-friendly.
 */
 @media (max-width: 900px){
-  .hero-title { font-size: 1.9rem; }
-  .story-image{ width: 48%; }
-  .story-content{ width: 52%; }
+  .hero-title { font-size: 2.4rem; }
+  .hero-sub { font-size: 1.1rem; }
+  .story-image{ flex: 0 0 220px; width: 220px; } /* slightly smaller on medium screens */
+  .story-content{ flex: 1; }
 }
 
 /* On narrow screens (phones), stack columns vertically to avoid tiny text/images */
 @media (max-width: 700px){
   .hero { min-height: 45vh; padding: 30px 16px; }
-  .hero-title { font-size: 1.5rem; }
+  .hero-inner { text-align: center; } /* keep centered on small screens for readability */
+  .hero-title { font-size: 1.8rem; }
   .hero-sub { font-size: 0.95rem; }
 
   /* Stack story image and text vertically for better readability */
@@ -164,4 +179,13 @@ main, .site-footer { max-width: var(--max-width); margin: 0 auto; padding: 20px;
     width:100%;
     box-sizing: border-box;
   }
+}
+
+/* Real-World Impact: smaller responsive image */
+.impact-image{
+  width: 180px;       /* small target display size */
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  object-fit: cover;
 }
